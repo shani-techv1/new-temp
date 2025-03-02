@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { ReactLenis, useLenis } from 'lenis/react';
 import { motion } from 'framer-motion';
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowDownLeft } from "lucide-react";
+import { ArrowDownLeft, Share2Icon, Twitter, Facebook, Linkedin, Copy } from "lucide-react";
 import { VelocityScroll } from '../magicui/scroll-based-velocity';
 import { creato_display, GarmondI } from '../../../fonts';
 import { DarkHoverButton, InteractiveHoverButton } from '../magicui/interactive-hover-button';
@@ -82,6 +83,29 @@ const itemVariants = {
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
+  const [showShareSuccess, setShowShareSuccess] = useState(false);
+
+  const handleShare = async (platform: string) => {
+    const shareUrl = window.location.href;
+    const shareText = "Check out Sourced - Find & Hire Top Creatives!";
+
+    switch (platform) {
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`);
+        break;
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`);
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`);
+        break;
+      case 'clipboard':
+        await navigator.clipboard.writeText(shareUrl);
+        setShowShareSuccess(true);
+        setTimeout(() => setShowShareSuccess(false), 2000);
+        break;
+    }
+  };
 
   // Lenis scroll tracking
   useLenis(({ scroll }) => {
@@ -272,7 +296,7 @@ export default function Home() {
 
             {/* Join Now Drawer */}
             <motion.div
-              className='flex w-full items-center justify-center'
+              className='flex w-full items-center justify-center gap-2'
               initial="hidden"
               whileInView="visible"
               variants={stickyRevealVariants}
@@ -300,6 +324,101 @@ export default function Home() {
                     <DrawerTitle className='text-center mt-4'>Sign Up & Get Early Access</DrawerTitle>
                     <DrawerDescription className='text-center mt-2'>Enter you details below or Connect your socials</DrawerDescription>
                     <SignupFormDemo />
+                  </div>
+                </DrawerContent>
+              </Drawer>
+              <Drawer>
+                <DrawerTrigger>
+                  <div className="group relative w-auto cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter">
+                    <div className="flex items-center justify-center text-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div>
+                      <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
+                        Share
+                      </span>
+                    </div>
+                    <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-primary-foreground opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                      <span>Share </span>
+                      <Share2Icon className="h-4 w-4"/>
+                    </div>
+                  </div>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mx-auto w-full max-w-screen-md p-6">
+                    <DrawerTitle className="text-center mt-4">Share Sourced</DrawerTitle>
+                    <DrawerDescription className="text-center mt-2">
+                      Share this platform with your network
+                    </DrawerDescription>
+                    <div className="flex flex-col gap-4 mt-6">
+                      <button
+                        onClick={() => handleShare('twitter')}
+                        className="group relative w-full cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
+                      >
+                        <div className="flex items-center justify-center text-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:hidden md:group-hover:-translate-x-10"></div>
+                          <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
+                            Share on Twitter
+                          </span>
+                        </div>
+                        <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-white opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                          <span>Twitter</span>
+                          <Twitter className="h-4 w-4"/>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare('facebook')}
+                        className="group relative w-full cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
+                      >
+                        <div className="flex items-center justify-center text-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:hidden md:group-hover:-translate-x-10"></div>
+                          <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
+                            Share on Facebook
+                          </span>
+                        </div>
+                        <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-white opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                          <span>Facebook</span>
+                          <Facebook className="h-4 w-4"/>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare('linkedin')}
+                        className="group relative w-full cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
+                      >
+                        <div className="flex items-center justify-center text-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:hidden md:group-hover:-translate-x-10"></div>
+                          <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
+                            Share on LinkedIn
+                          </span>
+                        </div>
+                        <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-white opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                          <span>LinkedIn</span>
+                          <Linkedin className="h-4 w-4"/>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => handleShare('clipboard')}
+                        className="group relative w-full cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
+                      >
+                        <div className="flex items-center justify-center text-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:hidden md:group-hover:-translate-x-10"></div>
+                          <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
+                            Copy Link
+                          </span>
+                        </div>
+                        <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-white opacity-0 transition-all duration-700 group-hover:-translate-x-6 group-hover:opacity-100">
+                          <span>Copy</span>
+                          <Copy className="h-4 w-4"/>
+                        </div>
+                      </button>
+                      
+                      {showShareSuccess && (
+                        <div className="text-center text-green-600 mt-2">
+                          Link copied to clipboard!
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </DrawerContent>
               </Drawer>

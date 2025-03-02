@@ -16,9 +16,9 @@ export const Footer: FC = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="rounded-md border border-black px-4 py-2 text-sm flex-1 placeholder-gray-400 focus:outline-none"
+              className="rounded-full border border-black px-4 py-2 text-sm flex-1 placeholder-gray-400 focus:outline-none"
             />
-            <button className="bg-black text-white px-6 py-2 rounded-md text-sm font-semibold tracking-widest flex items-center justify-center gap-1">
+            <button className="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold tracking-widest flex items-center justify-center gap-1">
               SUBSCRIBE
               <PlusCircle width={16} height={16} />
             </button>
