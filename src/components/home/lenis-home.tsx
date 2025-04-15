@@ -5,7 +5,7 @@ import { ReactLenis, useLenis } from 'lenis/react';
 import { motion } from 'framer-motion';
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowDownLeft, Share2Icon, Twitter, Facebook, Linkedin, Copy } from "lucide-react";
+import { ArrowDownLeft, Share2Icon, Twitter, Facebook, Linkedin, Copy, HelpCircle, Headset, ChevronDown, ArrowUpRight } from "lucide-react";
 import { VelocityScroll } from '../magicui/scroll-based-velocity';
 import { creato_display, GarmondI } from '../../../fonts';
 import { DarkHoverButton, InteractiveHoverButton } from '../magicui/interactive-hover-button';
@@ -28,8 +28,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import SignupFormDemo from '../signup-form-demo';
-import React from 'react';
+import SignupFlow from '../signup/SignupFlow';
+import React, { lazy, Suspense } from 'react';
+// Import the WhySourcedSection component lazily
+const WhySourcedSection = lazy(() => import('./why-sourced').then(mod => ({ default: mod.WhySourcedSection })));
 
 // Premium sticky scroll reveal animation variant
 const stickyRevealVariants = {
@@ -84,6 +86,7 @@ const itemVariants = {
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
   const [showShareSuccess, setShowShareSuccess] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleShare = async (platform: string) => {
     const shareUrl = window.location.href;
@@ -107,10 +110,22 @@ export default function Home() {
     }
   };
 
-  // Lenis scroll tracking
-  useLenis(({ scroll }) => {
-    console.log("Scroll position:", scroll);
+  // Modified Lenis scroll tracking to pause scrolling when modal is open
+  const lenis = useLenis(({ scroll }) => {
+    if (!modalOpen) {
+      console.log("Scroll position:", scroll);
+    }
   });
+
+  React.useEffect(() => {
+    if (modalOpen && lenis) {
+      document.body.classList.add('modal-open');
+      lenis.stop();
+    } else if (lenis) {
+      document.body.classList.remove('modal-open');
+      lenis.start();
+    }
+  }, [modalOpen, lenis]);
 
   const models = [
     {
@@ -148,8 +163,8 @@ export default function Home() {
   ];
 
   return (
-    <ReactLenis root>
-      <div className="relative min-h-screen">
+    <ReactLenis root options={{ gestureOrientation: 'vertical', smoothWheel: !modalOpen, touchMultiplier: modalOpen ? 0 : 1 }}>
+      <div className={`relative min-h-screen ${modalOpen ? 'pointer-events-none' : ''}`}>
         {/* Subtle texture background */}
         <div
           className="pointer-events-none absolute inset-0"
@@ -161,27 +176,120 @@ export default function Home() {
         />
 
         <main className={`bg-white text-black min-h-screen overflow-hidden ${creato_display.className}`} >
-          <div className="max-w-screen mx-auto px-4 md:px-12">
+          <div className="max-w-screen mx-auto">
 
             {/* Header */}
             <motion.header
-              className="flex justify-between items-center py-6 border-b border-gray-400"
+              className="flex justify-between items-center py-6 border-b border-gray-200 md:px-12 px-4 relative z-50 bg-white"
               initial="hidden"
               whileInView="visible"
               variants={stickyRevealVariants}
               viewport={{ once: true, amount: 0.2 }}
             >
               <h1 className="text-2xl md:text-3xl font-semibold tracking-wide uppercase">
-                Sourced
+                SOURCED
               </h1>
-              <div className="relative flex justify-end">
-                <nav className="text-2xl font-bold md:flex items-center space-x-3 hidden uppercase">
-                  <a href='#' className="text-gray-500">How it works,</a>
-                  <a href='#' className="text-gray-500">Company(2),</a>
-                  <a href='#' className="text-gray-900">legal,</a>
-                  <a href='#' className="text-gray-500">CONTACT</a>
+              
+              
+              
+              <div className="flex items-center space-x-4">
+              <div className="hidden md:flex items-center space-x-8">
+                <nav className="text-sm font-medium flex items-center space-x-6 uppercase">
+                  {/* How It Works Dropdown */}
+                  <div className="static group">
+                    <button className="flex items-center text-gray-500 group-hover:text-black transition-colors text-2xl md:text-3xl font-semibold tracking-wide uppercase">
+                      HOW IT WORKS(4)
+                      {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                    </button>
+                    
+                    {/* Full-width dropdown - simplified list style */}
+                    <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                      <div className="max-w-screen mx-auto">
+                        <div className="w-full flex flex-col">
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            For Talent
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            For Agents
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Pricing
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Security
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Company Dropdown */}
+                  <div className="static group">
+                    <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
+                      COMPANY(3)
+                      {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                    </button>
+                    
+                    {/* Full-width dropdown - simplified list style */}
+                    <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                      <div className="max-w-screen mx-auto">
+                        <div className="w-full flex flex-col">
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            About
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Information
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Team
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Careers
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Legal Dropdown */}
+                  <div className="static group">
+                    <button className="flex items-center text-2xl md:text-3xl font-semibold tracking-wide uppercase text-gray-500 group-hover:text-black transition-colors">
+                      LEGAL(3)
+                      {/* <ChevronDown className="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:rotate-180" /> */}
+                    </button>
+                    
+                    {/* Full-width dropdown - simplified list style */}
+                    <div className="absolute left-0 top-full w-full bg-white z-20 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 border-t border-gray-200 transform translate-y-0">
+                      <div className="max-w-screen mx-auto">
+                        <div className="w-full flex flex-col">
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Terms & Conditions
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Privacy Policy
+                          </a>
+                          <a href="#" className="w-full text-4xl font-bold hover:text-black text-black py-6 border-b border-gray-200 px-12 hover:bg-gray-50 transition-colors">
+                            Licensing
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* <a href='#' className="text-sm font-medium text-gray-500 hover:text-black transition-colors">CONTACT</a> */}
                 </nav>
-                <InteractiveHoverButton className='uppercase md:hidden' onClick={() => setShowPopup(!showPopup)}>
+              </div>
+                
+                {/* Support Button */}
+                <button 
+                  onClick={() => window.open('mailto:support@sourced.com', '_blank')}
+                  className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Support"
+                >
+                  <Headset className="h-6 w-6 text-gray-700 border border-[#9ca3af] rounded-full p-1" />
+                </button>
+                
+                <InteractiveHoverButton className='uppercase md:hidden ml-4' onClick={() => setShowPopup(!showPopup)}>
                   Menu
                 </InteractiveHoverButton>
                 {showPopup && (
@@ -194,7 +302,7 @@ export default function Home() {
 
             {/* Hero Section */}
             <motion.section
-              className="relative flex flex-col items-center justify-center h-[80vh] md:h-screen w-full text-center px-6 md:px-12"
+              className="relative flex flex-col items-center justify-center h-[80vh] md:h-screen w-full text-center"
               initial="hidden"
               whileInView="visible"
               variants={stickyRevealVariants}
@@ -203,14 +311,14 @@ export default function Home() {
               {/* Background Image */}
               <div className="absolute inset-0 w-full h-[80vh] md:h-screen">
                 <Image
-                  src="https://images.pexels.com/photos/27914238/pexels-photo-27914238/free-photo-of-portrait-of-woman-lying-down-in-black-and-white.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&dpr=2"
+                  src="/image.png"
                   alt="Creative Network"
                   fill
                   style={{ objectFit: "cover" }}
                   className="w-full h-full object-cover"
                 />
                 {/* Dark overlay for readability */}
-                <div className="absolute inset-0 bg-black/20 backdrop-blur-lg"></div>
+                <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
                 <VelocityScroll
                   numRows={1}
                   defaultVelocity={0.8}
@@ -222,67 +330,70 @@ export default function Home() {
               {/* Hero Content */}
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-6xl font-bold leading-tight tracking-wide text-white uppercase text-center">
-                  Find & Hire Top
+                Manage. Book. Create.
                 </h2>
                 <MorphingText
                   className='text-center uppercase tracking-wide text-white'
-                  texts={["Influencers", "Photographers"]}
+                  texts={["Photographer",
+  "Videographer",
+  "Director",
+  "Producer",
+  "Editor",
+  "Colorist",
+  "Audio Engineer",
+  "Gaffer",
+  "Grip",
+  "Hair Stylist",
+  "Makeup Artist",
+  "Wardrobe Stylist",
+  "Art Director",
+  "Set Designer",
+  "Prop Stylist",
+  "Location Scout",
+  "Model",
+  "Talent",
+  "Production Assistant",
+  "Digital Tech",
+  "Retoucher"]}
                 />
-                <p className={`text-lg md:text-xl text-gray-300 italic -translate-y-5 ${GarmondI.className}`}>
-                  Sign up as a creative or provider
+                <p className={`text-lg md:text-xl text-gray-500 -translate-y-5 ${GarmondI.className}`}>
+                Sourced simplifies creative connections
                 </p>
                 {/* CTA Buttons */}
-                <div className="flex flex-col md:flex-row justify-center gap-2 md:gap-6 mt-0 md:mt-8">
-                  <Drawer>
-                    <DrawerTrigger>
-                      <div
-                        className="group relative w-auto cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
-                      >
-                        <div className="flex items-center justify-center text-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div>
-                          <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
-                            Get Early Access
-                          </span>
-                        </div>
-                        <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-primary-foreground opacity-0 transition-all duration-700 group-hover:-translate-x-5 group-hover:opacity-100">
-                          <span>Get Early Access</span>
-                        </div>
-                      </div>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                      <div className="mx-auto w-full max-w-screen-md ">
-                        <DrawerTitle className='text-center mt-4'>Sign Up & Get Early Access</DrawerTitle>
-                        <DrawerDescription className='text-center mt-2'>Enter you details below or Connect your socials</DrawerDescription>
-                        <SignupFormDemo />
-                      </div>
-                    </DrawerContent>
-                  </Drawer>
-
-                  <button
-                    className="hidden md:block bg-gray-300 text-gray-600 md:px-8 py-4 rounded-full text-xs md:text-lg relative font-semibold tracking-widest uppercase"
-                    disabled
-                  >
-                    Join as Provider
-                    <span className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-400 text-gray-700 text-xs rounded-full opacity-0 hover:opacity-100 transition">
-                      Coming Soon
-                    </span>
-                  </button>
+                <div className="flex items-center justify-center mt-8">
+                  <div className="w-full max-w-xs md:max-w-none flex justify-center">
+                    <SignupFlow onOpenChange={setModalOpen} />
+                  </div>
                 </div>
               </div>
             </motion.section>
 
-            {/* Models Section */}
+            {/* Why Sourced Section */}
+            
             <motion.section
+              className="w-full py-12"
+              initial="hidden"
+              whileInView="visible"
+              variants={stickyRevealVariants}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <Suspense fallback={<div>Loading...</div>}>
+                <WhySourcedSection />
+              </Suspense>
+            </motion.section>
+
+            {/* Models Section */}
+            {/* <motion.section
               initial="hidden"
               whileInView="visible"
               variants={stickyRevealVariants}
               viewport={{ once: true, amount: 0.2 }}
             >
               <ModelsSection models={models} />
-            </motion.section>
+            </motion.section> */}
 
             {/* How It Works */}
-            <motion.section
+            {/* <motion.section
               className="flex justify-center w-full py-12"
               initial="hidden"
               whileInView="visible"
@@ -292,7 +403,9 @@ export default function Home() {
               <div className="max-w-5xl w-full">
                 <HowItWorksSection />
               </div>
-            </motion.section>
+            </motion.section> */}
+
+            
 
             {/* Join Now Drawer */}
             <motion.div
@@ -302,36 +415,13 @@ export default function Home() {
               variants={stickyRevealVariants}
               viewport={{ once: true, amount: 0.2 }}
             >
-              <Drawer>
-                <DrawerTrigger>
-                  <div
-                    className="group relative w-auto cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter"
-                  >
-                    <div className="flex items-center justify-center text-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div>
-                      <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
-                        Join Now
-                      </span>
-                    </div>
-                    <div className="absolute top-0 z-10 flex h-full w-full -translate-x-10 items-center justify-center gap-2 tracking-tighter text-primary-foreground opacity-0 transition-all duration-700 group-hover:-translate-x-5 group-hover:opacity-100">
-                      <span>Join now</span>
-                      <ArrowDownLeft className="h-4 w-4"/>
-                    </div>
-                  </div>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <div className="mx-auto w-full max-w-screen-md ">
-                    <DrawerTitle className='text-center mt-4'>Sign Up & Get Early Access</DrawerTitle>
-                    <DrawerDescription className='text-center mt-2'>Enter you details below or Connect your socials</DrawerDescription>
-                    <SignupFormDemo />
-                  </div>
-                </DrawerContent>
-              </Drawer>
+              <SignupFlow onOpenChange={setModalOpen} />
+              
               <Drawer>
                 <DrawerTrigger>
                   <div className="group relative w-auto cursor-pointer overflow-hidden rounded-full bg-black p-2 px-6 md:px-8 py-4 text-center text-xs md:text-lg font-semibold uppercase tracking-tighter">
                     <div className="flex items-center justify-center text-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div>
+                      {/* <div className="h-2 w-2 rounded-full bg-white transition-all duration-300 group-hover:-translate-x-20 md:group-hover:-translate-x-10"></div> */}
                       <span className="inline-block text-center transition-all duration-300 group-hover:translate-x-12 group-hover:opacity-0 text-white">
                         Share
                       </span>
