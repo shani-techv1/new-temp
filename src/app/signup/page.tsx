@@ -474,83 +474,82 @@ const handleSubmit = async ( ) => {
                               onChange={handleInputChange}
                               className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
                             >
-                              {field.options?.map(option => (
-                                <option key={option} value={option}>
-                                  {option}
-                                </option>
-                              ))}
+                             {field.options?.map((option: string) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+
                             </select>
                           )
                           :
                           field.type === "group" ? (
                            <>
-                           {field?.fields?.map(subField => (
-                            <div key={subField.name} className="flex flex-col space-y-2">
-                                <label 
-                                  htmlFor={subField.name} 
-                                  className="block text-sm font-medium text-gray-700 uppercase tracking-wide"
-                                >
-                                  {subField.label} {subField.isOptional && <span className="text-gray-400">(Optional)</span>}
-                                </label>
-                                
-                                {subField.type === "textarea" ? (
-                                  <textarea
-                                    id={subField.name}
-                                    name={subField.name}
-                                    placeholder={subField.placeholder}
-                                    onChange={handleInputChange}
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
-                                  />
-                                ) : subField.type === "file" ? (
-                                  <div className="mt-1">
-                                    <label htmlFor={subField.name} className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <p className="mb-2 text-sm text-gray-500">
-                                          <span className="font-semibold">Click to upload</span> or drag and drop
-                                        </p>
-                                        <p className="text-xs text-gray-500">
-                                          {subField.placeholder}
-                                        </p>
-                                      </div>
-                                      <input 
-                                        id={subField.name} 
-                                        name={subField.name}
-                                        type="file" 
-                                        multiple
-                                        className="hidden" 
-                                        onChange={handleFileChange} 
-                                      />
-                                    </label>
-                                  </div>
-                                )
-                                :
-                                subField.type === "select" ? (
-                                  <select
-                                    id={subField.name}
-                                    name={subField.name}
-                                    onChange={handleInputChange}
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
-                                  >
-                                    {subField.options?.map(option => (
-                                      <option key={option} value={option}>
-                                        {option}
-                                      </option>
-                                    ))}
-                                  </select>
-                                )
-                                :
-                                (
-                                  <input
-                                    id={subField.name}
-                                    name={subField.name}
-                                    type={subField.type}
-                                    placeholder={subField.placeholder}
-                                    onChange={handleInputChange}
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
-                                  />
-                                )}
-                              </div>
-                           ))}
+{(field as any)?.fields?.map((subField: any) => (
+  <div key={subField.name} className="flex flex-col space-y-2">
+    <label
+      htmlFor={subField.name}
+      className="block text-sm font-medium text-gray-700 uppercase tracking-wide"
+    >
+      {subField.label} {subField.isOptional && <span className="text-gray-400">(Optional)</span>}
+    </label>
+
+    {subField.type === "textarea" ? (
+      <textarea
+        id={subField.name}
+        name={subField.name}
+        placeholder={subField.placeholder}
+        onChange={handleInputChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+      />
+    ) : subField.type === "file" ? (
+      <div className="mt-1">
+        <label
+          htmlFor={subField.name}
+          className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+        >
+          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <p className="mb-2 text-sm text-gray-500">
+              <span className="font-semibold">Click to upload</span> or drag and drop
+            </p>
+            <p className="text-xs text-gray-500">{subField.placeholder}</p>
+          </div>
+          <input
+            id={subField.name}
+            name={subField.name}
+            type="file"
+            multiple
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </label>
+      </div>
+    ) : subField.type === "select" || subField.type === "radio" ? (
+      <select
+        id={subField.name}
+        name={subField.name}
+        onChange={handleInputChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+      >
+        {subField.options?.map((option: any) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <input
+        id={subField.name}
+        name={subField.name}
+        type={subField.type}
+        placeholder={subField.placeholder}
+        onChange={handleInputChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-black focus:ring-1 focus:ring-black"
+      />
+    )}
+  </div>
+))}
+
                            </>
                           )
                            : (

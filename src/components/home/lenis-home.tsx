@@ -174,13 +174,13 @@ export default function Home() {
     return () => clearInterval(checkTawk);
   }, []);
 
-  const openChat = () => {
-    if (window.Tawk_API) {
-      window.Tawk_API.showWidget();
-      window.Tawk_API.maximize();
-    }
-  };
-    
+ const openChat = () => {
+  if (window.Tawk_API) {
+    window.Tawk_API.showWidget?.();
+    window.Tawk_API.maximize?.();
+  }
+};
+
 
   useEffect(() => {
     const handleScroll = () => {

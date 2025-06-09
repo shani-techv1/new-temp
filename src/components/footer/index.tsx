@@ -3,10 +3,23 @@ import { FC, useEffect } from "react";
 import { ArrowUpRight, PlusCircle } from "lucide-react";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import Script from 'next/script';
+import Script from "next/script";
 
+// 👇  Tawk_API typing 
+declare global {
+  interface Window {
+    Tawk_API?: {
+      showWidget?: () => void;
+      hideWidget?: () => void;
+      maximize?: () => void;
+      [key: string]: any;
+    };
+    Tawk_LoadStart?: Date;
+  }
+}
 
-// Define animation variants for the Sourced text
+export {}; // if you're writing this in a module
+
 const logoVariants: Variants = {
   hidden: {
     opacity: 0,
@@ -17,26 +30,25 @@ const logoVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for sleek motion
-    }
-  }
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
 };
 
-// Letter animation for staggered reveal
 const letterVariants: Variants = {
-  hidden: { 
+  hidden: {
     opacity: 0,
-    y: 20
+    y: 20,
   },
   visible: (custom) => ({
     opacity: 1,
     y: 0,
-    transition: { 
+    transition: {
       duration: 0.5,
-      delay: custom * 0.05, // Staggered delay based on letter index
+      delay: custom * 0.05,
       ease: [0.22, 1, 0.36, 1],
-    }
-  })
+    },
+  }),
 };
 
 export const Footer: FC = () => {
@@ -52,19 +64,15 @@ export const Footer: FC = () => {
     }
   }, [controls, inView]);
 
-  // Split the text "Sourced" into letters for individual animation
   const logoText = "SOURCED";
   const logoLetters = logoText.split("");
 
   return (
     <footer className="w-full bg-white mt-16 py-16 px-6 md:px-16 border-t border-gray-400">
       <div className="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between gap-12">
-        {/* LEFT: Subscription Box */}
         <div className="flex-1 p-8 rounded-3xl bg-gray-100 flex flex-col items-start justify-center">
           <h3 className="text-xl font-bold">SUBSCRIBE FOR FIRST ACCESS</h3>
           <p className="text-base mt-2 mb-6 text-black/80">NO SALES OR SPAM</p>
-
-          {/* Email + Subscribe */}
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <input
               type="email"
@@ -78,106 +86,60 @@ export const Footer: FC = () => {
           </div>
         </div>
 
-        {/* RIGHT: Navigation Columns */}
         <div className="flex-[1.2] flex flex-wrap md:flex-nowrap gap-12 uppercase">
-          {/* ACCOUNT COLUMN */}
+          {/* Account */}
           <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Account
-            </h4>
+            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">Account</h4>
             <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Login</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Join</a>
-              </li>
+              <li><a href="#" className="hover:font-medium">Login</a></li>
+              <li><a href="#" className="hover:font-medium">Join</a></li>
             </ul>
           </div>
 
-          {/* HOW IT WORKS COLUMN */}
+          {/* How it works */}
           <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              How It Works
-            </h4>
+            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">How It Works</h4>
             <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Pricing</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Booking</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">For a Creator</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">For an Agency</a>
-              </li>
+              <li><a href="#" className="hover:font-medium">Pricing</a></li>
+              <li><a href="#" className="hover:font-medium">Booking</a></li>
+              <li><a href="#" className="hover:font-medium">For a Creator</a></li>
+              <li><a href="#" className="hover:font-medium">For an Agency</a></li>
             </ul>
           </div>
 
-          {/* COMPANY COLUMN */}
+          {/* Company */}
           <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Company
-            </h4>
+            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">Company</h4>
             <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">About</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Contact</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Information</a>
-              </li>
+              <li><a href="#" className="hover:font-medium">About</a></li>
+              <li><a href="#" className="hover:font-medium">Contact</a></li>
+              <li><a href="#" className="hover:font-medium">Information</a></li>
             </ul>
           </div>
 
-          {/* LEGAL COLUMN */}
+          {/* Legal */}
           <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Legal
-            </h4>
+            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">Legal</h4>
             <ul className="space-y-3 text-base text-black">
-              <li>
-                <a href="#" className="hover:font-medium">Terms</a>
-              </li>
-              <li>
-                <a href="#" className="hover:font-medium">Privacy</a>
-              </li>
+              <li><a href="#" className="hover:font-medium">Terms</a></li>
+              <li><a href="#" className="hover:font-medium">Privacy</a></li>
             </ul>
           </div>
 
-          {/* SOCIAL MEDIA COLUMN */}
+          {/* Social */}
           <div className="min-w-[140px]">
-            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">
-              Social Media
-            </h4>
+            <h4 className="font-semibold text-gray-500 uppercase text-sm mb-4">Social Media</h4>
             <ul className="space-y-3 text-base text-black">
-              {/* Instagram */}
               <li className="group relative inline-flex items-center">
                 <a href="#" className="hover:font-medium flex items-center">
                   Instagram
-                  <ArrowUpRight
-                    size={22}
-                    strokeWidth={2.5}
-                    absoluteStrokeWidth
-                    className="transform opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300"
-                  />
+                  <ArrowUpRight className="transform opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300" />
                 </a>
               </li>
-
-              {/* LinkedIn */}
               <li className="group relative inline-flex items-center">
                 <a href="#" className="hover:font-medium flex items-center">
                   LinkedIn
-                  <ArrowUpRight
-                    size={22}
-                    strokeWidth={2.5}
-                    absoluteStrokeWidth
-                    className="transform opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300"
-                  />
+                  <ArrowUpRight className="transform opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition duration-300" />
                 </a>
               </li>
             </ul>
@@ -185,11 +147,9 @@ export const Footer: FC = () => {
         </div>
       </div>
 
-      {/* Divider */}
       <div className="h-px bg-gray-200 my-16"></div>
-      
-      {/* Large Brand Logo with Animation */}
-      <motion.div 
+
+      <motion.div
         ref={ref}
         className="max-w-screen-2xl mx-auto mb-20 overflow-hidden"
         initial="hidden"
@@ -203,57 +163,49 @@ export const Footer: FC = () => {
               custom={index}
               variants={letterVariants}
               className="inline-block"
-              style={{ 
-                display: 'inline-block', 
-                willChange: 'transform'
-              }}
+              style={{ willChange: "transform" }}
             >
               {letter}
             </motion.span>
           ))}
         </h1>
       </motion.div>
-      
-      {/* Copyright and Legal Links */}
-      <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center text-base text-gray-500
-      border-t border-black
-      py-6 gap-6">
+
+      <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center text-base text-gray-500 border-t border-black py-6 gap-6">
         <div>© Sourced. 2025 All rights reserved.</div>
         <div className="flex space-x-6">
           <a href="#" className="hover:text-black transition-colors">Terms & Conditions</a>
           <a href="#" className="hover:text-black transition-colors">Privacy Policy</a>
         </div>
         <div className="flex space-x-4">
-      <a href="#" aria-label="Instagram" className="hover:opacity-75">
-        <img src=" /insta.png" alt="Instagram" className="h-6 w-6" />
-      </a>
-      <a href="#" aria-label="LinkedIn" className="hover:opacity-75">
-        <img src=" /linkdin.png" alt="LinkedIn" className="h-6 w-6" />
-      </a>
-    </div>
+          <a href="#" aria-label="Instagram" className="hover:opacity-75">
+            <img src="/insta.png" alt="Instagram" className="h-6 w-6" />
+          </a>
+          <a href="#" aria-label="LinkedIn" className="hover:opacity-75">
+            <img src="/linkdin.png" alt="LinkedIn" className="h-6 w-6" />
+          </a>
+        </div>
       </div>
 
-     {/* Tawk.to script */}
+      {/* ✅ Tawk.to script */}
       <Script
-        strategy="afterInteractive"
-        src="https://embed.tawk.to/67cbecbd2c2717190f9e743f/1ilq99hcs"
-         onLoad={() => {
-          window.Tawk_API = window.Tawk_API || {};
-          window.Tawk_LoadStart = new Date();
+  strategy="afterInteractive"
+  src="https://embed.tawk.to/67cbecbd2c2717190f9e743f/1ilq99hcs"
+  onLoad={() => {
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
 
-          // Wait for Tawk to be ready, then hide the widget
-          const waitForTawk = setInterval(() => {
-            if (window.Tawk_API?.hideWidget) {
-              window.Tawk_API.hideWidget();
-              clearInterval(waitForTawk);
-            }
-          }, 300);
-        }}
-        async
-        charSet="UTF-8"
-        crossOrigin="*"
-      />
- 
+    const waitForTawk = setInterval(() => {
+      if (window.Tawk_API?.hideWidget) {
+        window.Tawk_API.hideWidget();
+        clearInterval(waitForTawk);
+      }
+    }, 300);
+  }}
+  async
+  charSet="UTF-8"
+/>
+
     </footer>
   );
 };

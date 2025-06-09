@@ -37,7 +37,10 @@ export interface FormField {
   type: string;
   placeholder: string;
   isOptional?: boolean;
+  options ?: any;
+  
 }
+
 
 function extractCommonFields(...roles: FormField[][]): FormField[] {
   const fieldMap = new Map<string, number>();
@@ -120,6 +123,7 @@ export const photographerFields: FormField[] = [
     name: "gender",
     label: "Gender",
     type: "select",
+    placeholder: "code",
     options: ["Male", "Female", "Other", "Prefer not to say"]
   },
   {
@@ -232,6 +236,8 @@ export const videographerFields: FormField[] = [
     name: "gender",
     label: "Gender",
     type: "select",
+        placeholder: "code",
+
     options: ["Male", "Female", "Other", "Prefer not to say"]
   },
   {
@@ -297,7 +303,7 @@ export const videographerFields: FormField[] = [
 
 // Export vehicles fields
 
-export const vehiclesFields: FormField[] = [
+export const vehiclesFields: any = [
 
    {
     name: "firstName",
@@ -335,7 +341,6 @@ export const vehiclesFields: FormField[] = [
     name: "vehicles",
     label: "Vehicles",
     type: "group",
-    repeatable: true,
     fields: [
       {
         name: "type",
